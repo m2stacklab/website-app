@@ -60,9 +60,9 @@ export async function getServerSideProps() {
   if (showHostname === 'true'){
     hostname = os.hostname()
   }
-  const title =  process.env.TITLE || '';
-  const by =  process.env.BY || '';
-  const byHost = process.env.BY_HOST || '';
+  const title =  process.env.TITLE || 'm2stacklab';
+  const by =  process.env.BY || 'm2stacklab';
+  const byHost = process.env.BY_HOST || 'm2stacklab.io';
   return {
     props: {
       websiteTitle: title,
