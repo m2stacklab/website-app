@@ -2,7 +2,8 @@ import Head from 'next/head'
 import os from 'os'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
-import {NextPage} from "next";
+import { NextPage } from "next";
+import { getVersion } from './api/version';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,6 +12,7 @@ type HomeProps = {
   by: string;
   byHost: string;
   hostname: string;
+  version: string;
 }
 
 const Home: NextPage<HomeProps> = (props) => {
@@ -47,6 +49,7 @@ const Home: NextPage<HomeProps> = (props) => {
 
         <div className={styles.description}>
           <code className={styles.code}>{props.hostname}</code>
+          <code className={styles.code}>version: {props.version}</code>
         </div>
       </main>
     </>
@@ -54,21 +57,33 @@ const Home: NextPage<HomeProps> = (props) => {
 }
 
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
   let hostname = null;
+  let servername = process.env.TITLE;
+
   const showHostname = process.env.SHOW_HOSTNAME;
-  if (showHostname === 'true'){
+  const useHostname = process.env.USE_HOST_NAME;
+  const version = getVersion().version;
+
+  if (showHostname === 'true') {
     hostname = os.hostname()
   }
-  const title =  process.env.TITLE || 'm2stacklab';
-  const by =  process.env.BY || 'm2stacklab';
+
+  if (useHostname === 'true') {
+    servername = context.req.headers.host;
+  }
+
+  const title = servername;
+  const by = process.env.BY || 'm2stacklab';
   const byHost = process.env.BY_HOST || 'm2stacklab.io';
+
   return {
     props: {
       websiteTitle: title,
       by,
       hostname,
-      byHost
+      byHost,
+      version
     }
   }
 }

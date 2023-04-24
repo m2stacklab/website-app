@@ -6,7 +6,14 @@ import { version } from '../../package.json';
 type Data = {
   version: string,
   hostname: string,
-  env: any
+  env: any,
+  url: string | undefined
+}
+
+export function getVersion() {
+  return {
+    version: version || '',
+  }
 }
 
 export default function handler(
@@ -15,6 +22,7 @@ export default function handler(
 ) {
   res.status(200).json({
     version: version || '',
+    url: req.headers.host,
     hostname: os.hostname(),
     env: {
       BY: process.env.BY,
